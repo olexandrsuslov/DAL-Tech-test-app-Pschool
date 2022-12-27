@@ -54,7 +54,6 @@ namespace PschoolAPIback.Controllers
         }
 
         // PUT: api/Student/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id:int}")]
         public async Task<IActionResult> PutStudent(int id, StudentDto studentDto)
         {
@@ -88,7 +87,6 @@ namespace PschoolAPIback.Controllers
         }
 
         // POST: api/Student
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<StudentDto>> PostItem([FromBody]StudentDto studentdto)
         {
