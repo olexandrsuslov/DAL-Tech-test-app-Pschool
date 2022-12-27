@@ -1,0 +1,23 @@
+@page "/"
+@using System.Security.Cryptography
+@using Pschool.Models.Dtos
+@inherits ParentsBase
+
+
+
+
+@if (Parents == null)
+{
+    <DisplaySpinner/>
+}
+else
+{
+    <h3 class="mb-5">Parents</h3>
+
+    var parentsCount = Parents.Count();
+
+    @if (parentsCount > 0)
+    {
+        <DisplayParents Parents="@Parents.ToList()"></DisplayParents>
+    }
+}

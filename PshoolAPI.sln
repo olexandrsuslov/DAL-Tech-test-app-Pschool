@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PschoolAPIback", "PschoolAPIback\PschoolAPIback.csproj", "{9E6CA0B5-E4F2-4456-A3A5-2165E5F8C1D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PschoolAPIfront", "PschoolAPIfront\PschoolAPIfront.csproj", "{A8EA724B-F0E6-4B85-A10C-B44A668459C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pschool.Models", "Pschool.Models\Pschool.Models.csproj", "{8FD3AA2D-14D0-46C1-8561-448E1D7EA97C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E6CA0B5-E4F2-4456-A3A5-2165E5F8C1D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E6CA0B5-E4F2-4456-A3A5-2165E5F8C1D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E6CA0B5-E4F2-4456-A3A5-2165E5F8C1D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E6CA0B5-E4F2-4456-A3A5-2165E5F8C1D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8EA724B-F0E6-4B85-A10C-B44A668459C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8EA724B-F0E6-4B85-A10C-B44A668459C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8EA724B-F0E6-4B85-A10C-B44A668459C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8EA724B-F0E6-4B85-A10C-B44A668459C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FD3AA2D-14D0-46C1-8561-448E1D7EA97C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FD3AA2D-14D0-46C1-8561-448E1D7EA97C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FD3AA2D-14D0-46C1-8561-448E1D7EA97C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FD3AA2D-14D0-46C1-8561-448E1D7EA97C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

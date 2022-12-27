@@ -1,0 +1,23 @@
+@page "/Students"
+@using System.Security.Cryptography
+@using Pschool.Models.Dtos
+@inherits StudentsBase
+
+
+
+
+@if (Students == null)
+{
+    <DisplaySpinner/>
+}
+else
+{
+    <h3 class="mb-5">Students</h3>
+
+    var studentsCount = Students.Count();
+
+    @if (studentsCount > 0)
+    {
+        <DisplayStudents Students="@Students.ToList()" Parents="@Parents.ToList()"></DisplayStudents>
+    }
+}

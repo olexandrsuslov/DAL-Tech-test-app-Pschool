@@ -1,0 +1,51 @@
+@page "/AddStudent"
+@inherits AddStudentBase
+@using Microsoft.AspNetCore.Components
+@using Pschool.Models.Dtos
+@using PschoolAPIfront.Services.Contracts
+<h3>Add new Student</h3>
+
+<EditForm Model="@student" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <p>
+        <label> Parent Number: </label>
+        <InputNumber @bind-Value="student.ParentId" />
+        <ValidationMessage For="() => student.ParentId" />
+    </p>
+    <p>
+        <label>First Name: </label>
+        <InputText @bind-Value="student.FirstName" />
+        <ValidationMessage For="() => student.FirstName" />
+    </p>
+    <p>
+        <label>Last Name: </label>
+        <InputText @bind-Value="student.LastName" />
+        <ValidationMessage For="() => student.LastName" />
+    </p>
+    <p>
+        <label>Username: </label>
+        <InputText @bind-Value="student.Username" />
+        <ValidationMessage For="() => student.Username" />
+    </p>
+    <p>
+        <label>Email: </label>
+        <InputText @bind-Value="student.Email" />
+        <ValidationMessage For="() => student.Email" />
+    </p>
+    <p>
+        <label>Phone 1: </label>
+        <InputText @bind-Value="student.PhoneOne" />
+        <ValidationMessage For="() => student.PhoneOne" />
+    </p>
+    <p>
+        <label>Siblings: </label>
+        <InputNumber @bind-Value="student.SiblingCount" />
+        <ValidationMessage For="() => student.SiblingCount" />
+    </p>
+    <button type="submit">Add</button>
+</EditForm>
+
+@if (IsValid)
+{
+    <h3 style="color: green;">Data was added successfully</h3>
+}

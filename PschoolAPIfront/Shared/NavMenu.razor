@@ -1,0 +1,68 @@
+﻿
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <img src="favicon.ico">
+        <a class="navbar-brand" href="" style="padding-right: 50px;">Pschool</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <div class="nav-link dropdown-toggle" style="color: #d7d7d7;" Match="NavLinkMatch.All" @onclick="()=>expandSubNav = !expandSubNav">
+                <span class="oi oi-home" aria-hidden="true"></span> Parents
+            </div>
+            @if (expandSubNav)
+            {
+                <NavLink class="nav-link" href="/AddParent">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Add Parent
+                </NavLink>
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="oi oi-list" aria-hidden="true"></span> Parents
+                </NavLink>
+            }
+        </div>
+        <div class="nav-item px-3">
+            <div class="nav-link dropdown-toggle" style="color: #d7d7d7;" @onclick="() => expandSubNavTwo = !expandSubNavTwo">
+                <span class="oi oi-home" aria-hidden="true"></span> Students
+            </div>
+            @if (expandSubNavTwo)
+            {
+                <NavLink class="nav-link" href="/AddStudent">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Add Student
+                </NavLink>
+                <NavLink class="nav-link" href="Students">
+                    <span class="oi oi-list" aria-hidden="true"></span> Students
+                </NavLink>
+            }
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool expandSubNav;
+    private bool expandSubNavTwo;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+}
