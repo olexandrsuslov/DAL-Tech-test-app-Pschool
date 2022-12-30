@@ -40,6 +40,7 @@ public class StudentDto
     [Required]
     public string PhoneOne { get; set; }
     [Required]
+    [Range(1, double.MaxValue, ErrorMessage = "Value for the Sibling Count can't be lower than 1")]
     public int SiblingCount { get; set; }
 }
 

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Pschool.Models.Dtos;
 using PschoolAPIfront.Services.Contracts;
+using PschoolAPIfront.Shared;
 
 namespace PschoolAPIfront.Pages;
 
@@ -12,7 +13,7 @@ public class AddParentBase : ComponentBase
 
     public string ErrorMessage { get; set; }
 
-    public bool IsValid;
+    public SuccessNotification _notification;
 
     protected override void OnInitialized()
     {
@@ -20,18 +21,17 @@ public class AddParentBase : ComponentBase
     }
     public async Task HandleValidSubmit()
     {
-        IsValid = true;
-    try
+        try
     {
         parent = await parentService.AddItem(parent);
         Console.WriteLine(parent);
+        _notification.Show();
     }
     catch (Exception e)
     {
         Console.WriteLine(e.Message);
         ErrorMessage = e.Message;
     }
-    IsValid = false;
     }
     
 }

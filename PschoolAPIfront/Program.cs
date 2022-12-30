@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 using PschoolAPIfront;
 using PschoolAPIfront.Pages;
 using PschoolAPIfront.Services;
@@ -13,4 +14,5 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 builder.Services.AddScoped<IParentService, ParentService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddSyncfusionBlazor();
+builder.Services.AddMudServices();
 await builder.Build().RunAsync();

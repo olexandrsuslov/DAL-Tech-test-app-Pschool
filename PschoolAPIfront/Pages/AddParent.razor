@@ -1,61 +1,38 @@
 @page "/AddParent"
 @inherits AddParentBase
 @using Microsoft.AspNetCore.Components
-@using Pschool.Models.Dtos
-@using PschoolAPIfront.Services.Contracts
-<h3>Add new Parent</h3>
 
-<EditForm Model="@parent" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <p>
-        <label>First Name: </label>
-        <InputText @bind-Value="parent.FirstName" />
-        <ValidationMessage For="() => parent.FirstName" />
-    </p>
-    <p>
-        <label>Last Name: </label>
-        <InputText @bind-Value="parent.LastName" />
-        <ValidationMessage For="() => parent.LastName" />
-    </p>
-    <p>
-        <label>Username: </label>
-        <InputText @bind-Value="parent.Username" />
-        <ValidationMessage For="() => parent.Username" />
-    </p>
-    <p>
-        <label>Email: </label>
-        <InputText @bind-Value="parent.Email" />
-        <ValidationMessage For="() => parent.Email" />
-    </p>
-    <p>
-        <label>Home Address: </label>
-        <InputText @bind-Value="parent.Address" />
-        <ValidationMessage For="() => parent.Address" />
-        </p>
-    <p>
-        <label>Phone 1: </label>
-        <InputText @bind-Value="parent.PhoneOne" />
-        <ValidationMessage For="() => parent.PhoneOne" />
-    </p>
-    <p>
-        <label>Phone Work: </label>
-        <InputText @bind-Value="parent.PhoneWork" />
-        <ValidationMessage For="() => parent.PhoneWork" />
-    </p>
-    <p>
-        <label>Phone Home: </label>
-        <InputText @bind-Value="parent.PhoneHome" />
-        <ValidationMessage For="() => parent.PhoneHome" />
-    </p>
-    <p>
-        <label>Siblings: </label>
-        <InputNumber @bind-Value="parent.SiblingCount" />
-        <ValidationMessage For="() => parent.SiblingCount" />
-    </p>
-    <button type="submit">Add</button>
-</EditForm>
+<section style="width:600px; margin: 0 auto;">
+	<EditForm Model="@parent" OnValidSubmit="@HandleValidSubmit">
+		<DataAnnotationsValidator />
+		<MudCard>
+			<MudCardContent>
+				<MudTextField Label="First Name" @bind-Value="parent.FirstName"
+							  For="@(() => parent.FirstName)" />
+				<MudTextField Label="Last Name" @bind-Value="parent.LastName"
+				              For="@(() => parent.LastName)" />
+				<MudTextField Label="Username" @bind-Value="parent.Username"
+				              For="@(() => parent.Username)" />
+				<MudTextField Label="Email" @bind-Value="parent.Email"
+				              For="@(() => parent.Email)" />
+				<MudTextField Label="Home Address" @bind-Value="parent.Address"
+				              For="@(() => parent.Address)" />
+				<MudTextField Label="Phone 1" @bind-Value="parent.PhoneOne"
+				              For="@(() => parent.PhoneOne)" />
+				<MudTextField Label="Phone Work" @bind-Value="parent.PhoneWork"
+				              For="@(() => parent.PhoneWork)" />
+				<MudTextField Label="Phone Home" @bind-Value="parent.PhoneHome"
+				              For="@(() => parent.PhoneHome)" />
+				<MudNumericField Label="Sibling Count" @bind-Value="parent.SiblingCount"
+				                 For="@(() => parent.SiblingCount)"></MudNumericField>
+				<br/>
+			</MudCardContent>
+			<MudCardActions>
+				<MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" 
+						   Class="ml-auto">Add Parent</MudButton>
+			</MudCardActions>
+		</MudCard>
+	</EditForm>
+</section>
 
-@if (IsValid)
-{
-    <h3 style="color: green;">Data was added successfully</h3>
-}
+<SuccessNotification Uri="/" @ref="_notification"/>

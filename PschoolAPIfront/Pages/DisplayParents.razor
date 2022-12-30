@@ -2,8 +2,12 @@
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div style="border: 1px solid #d6d5d5;text-align: right;">
+    <MudButton ButtonType="ButtonType.Button" Href="/AddParent" Variant="Variant.Filled" Color="Color.Primary" 
+               Class="ml-auto" Style="margin: 10px;">Add Parent</MudButton>
+</div>
 <div style="border: 1px solid #d6d5d5;">
-<table class="table" style="width:100%">
+<table class="table" style="width:100%;color: inherit;">
     <thead>
     <tr>
         <th style="color:DodgerBlue;">
@@ -38,7 +42,7 @@
         </th>
     </tr>
     </thead>
-    <tbody>
+    <tbody style="color: inherit;">
     @foreach(var item in Parents) {
         <tr>
             <td>@item.FirstName</td>
