@@ -1,6 +1,10 @@
 @page "/AddParent"
 @inherits AddParentBase
 @using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "admin")]
+
+
 
 <section style="width:600px; margin: 0 auto;">
 	<EditForm Model="@parent" OnValidSubmit="@HandleValidSubmit">

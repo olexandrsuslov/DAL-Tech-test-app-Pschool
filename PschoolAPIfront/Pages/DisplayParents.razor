@@ -1,67 +1,66 @@
-@inherits DisplayParentsBase
+@using Syncfusion.Blazor.Charts.BulletChart.Internal
+@using Pschool.Models.Dtos
+@* @inherits DisplayParentsBase *@
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<div style="border: 1px solid #d6d5d5;text-align: right;">
-    <MudButton ButtonType="ButtonType.Button" Href="/AddParent" Variant="Variant.Filled" Color="Color.Primary" 
-               Class="ml-auto" Style="margin: 10px;">Add Parent</MudButton>
-</div>
-<div style="border: 1px solid #d6d5d5;">
-<table class="table" style="width:100%;color: inherit;">
-    <thead>
-    <tr>
-        <th style="color:DodgerBlue;">
-            First<br>Name
-        </th>
-        <th style="color:DodgerBlue;">
-            Last<br>Name 
-        </th>
-        <th style="color:DodgerBlue;">
-            Username
-        </th>
-        <th style="color:DodgerBlue;">
-            Email
-        </th>
-        <th style="color:DodgerBlue;">
-            Home<br>Address
-        </th>
-        <th style="color:DodgerBlue;">
-            Phone 1
-        </th>
-        <th style="color:DodgerBlue;">
-            Work<br>Phone
-        </th>
-        <th style="color:DodgerBlue;">
-            Home<br>Phone
-        </th>
-        <th style="color:DodgerBlue;">
-            Siblings
-        </th>
-        <th>
-            Action
-        </th>
-    </tr>
-    </thead>
-    <tbody style="color: inherit;">
-    @foreach(var item in Parents) {
-        <tr>
-            <td>@item.FirstName</td>
-            <td>@item.LastName</td>
-            <td>@item.Username</td>
-            <td>@item.Email</td>
-            <td>@item.Address</td>
-            <td>@item.PhoneOne</td>
-            <td>@item.PhoneWork</td>
-            <td>@item.PhoneHome</td>
-            <td>@item.SiblingCount</td>
-                    
-            <td>
-                <a style="padding-right:5px;" href="/ParentDetails/@item.ParentId"><i class="fa fa-bars" style="width:10px;height:10px;color:DodgerBlue;"></i></a>
-                <a style="padding-right:5px;" href="/EditParent/@item.ParentId"><i class="fa fa-magic" style="width:10px;height:10px;color:DodgerBlue;" ></i></a>
-                <a style="padding-right:5px;"><i class="fa fa-trash" style="width:10px;height:10px;color:DodgerBlue;" @onclick="() => DeleteItem_Click(item.ParentId)"></i></a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
-</div>
+
+
+<AuthorizeView Roles="admin">
+    <Authorized>
+        <MudContainer Style="border: 1px solid #d6d5d5;text-align: right;">
+            <MudButton ButtonType="ButtonType.Button" Href="/AddParent" Variant="Variant.Filled" Color="Color.Primary"
+                       Class="ml-auto" Style="margin: 10px;">Add Parent</MudButton>
+        </MudContainer>
+    </Authorized>
+</AuthorizeView>
+   
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<ParentDto>>>(GetServerData))" Hover="true" Breakpoint="Breakpoint.Sm" RightAlignSmall="true"  @ref="_table" RowsPerPage="4" NoRecordsContent=@RenderNoParentsInfo Style="color: inherit;">
+
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Parents</MudText>
+        <MudSpacer/>
+        <MudTextField OnDebounceIntervalElapsed="OnSearch" Placeholder="Search" Adornment="Adornment.Start" 
+                AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" 
+                Class="mt-0" T="string" DebounceInterval="500"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="FirstName" T="ParentDto">First<br>Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="LastName" T="ParentDto">Last<br>Name</MudTableSortLabel></MudTh>
+        <MudTh>Username</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh>Home<br>Address</MudTh>
+        <MudTh>Phone 1</MudTh>
+        <MudTh>Work<br>Phone</MudTh>
+        <MudTh>Home<br>Phone</MudTh>
+        <MudTh>Siblings</MudTh>
+        <MudTh>Action</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="First Name">@context.FirstName</MudTd>
+        <MudTd DataLabel="Last Name">@context.LastName</MudTd>
+        <MudTd DataLabel="Username">@context.Username</MudTd>
+        <MudTd DataLabel="Email">@context.Email</MudTd>
+        <MudTd DataLabel="Home Address">@context.Address</MudTd>
+        <MudTd DataLabel="Phone 1">@context.PhoneOne</MudTd>
+        <MudTd DataLabel="Work Phone">@context.PhoneWork</MudTd>
+        <MudTd DataLabel="Home Phone">@context.PhoneHome</MudTd>
+        <MudTd DataLabel="Siblings">@context.SiblingCount</MudTd>
+        <MudTd DataLabel="Action">
+            <a style="padding-right:5px;" href="/ParentDetails/@context.ParentId"><i class="fa fa-bars" style="width:10px;height:10px;color:DodgerBlue;"></i></a>
+            <a style="padding-right:5px;" href="/EditParent/@context.ParentId"><i class="fa fa-magic" style="width:10px;height:10px;color:DodgerBlue;"></i></a>
+            <a style="padding-right:5px;"><i class="fa fa-trash" style="width:10px;height:10px;color:DodgerBlue;" @onclick="() => DeleteItem_Click(context.ParentId)"></i></a>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="@_pageSizeOption" RowsPerPageString="Parents per page" /> 
+    </PagerContent>
+</MudTable>
+
+@code {
+    private RenderFragment RenderNoParentsInfo = __builder =>
+    {
+        <p>no parents</p>
+    };
+}

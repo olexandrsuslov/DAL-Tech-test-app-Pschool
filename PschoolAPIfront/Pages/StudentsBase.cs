@@ -10,13 +10,11 @@ public class StudentsBase : ComponentBase
     public IStudentService StudentService { get; set; }
     [Inject]
     public IParentService ParentService { get; set; }
-
-    public IEnumerable<StudentDto> Students { get; set; }
+    
     public IEnumerable<ParentDto> Parents { get; set; } 
 
     protected override async Task OnInitializedAsync()
     {
-        Students = await StudentService.GetItems();
-        Parents = await ParentService.GetItems();
+        Parents = await ParentService.GetItemsDefault();
     }
 }

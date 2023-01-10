@@ -3,7 +3,9 @@
 @using Microsoft.AspNetCore.Components
 @using Pschool.Models.Dtos
 @using PschoolAPIfront.Services.Contracts
-<h3>Edit Student</h3>
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "admin")]
 
 @if (student == null && ErrorMessage == null)
 {
@@ -15,49 +17,36 @@ else if (ErrorMessage != null)
 }
 else
 {
-    <EditForm Model="@student" OnValidSubmit="@HandleValidSubmit">
-        <DataAnnotationsValidator/>
-        <p>
-            <label> Parent Number: </label>
-            <InputNumber @bind-Value="student.ParentId"/>
-            <ValidationMessage For="() => student.ParentId"/>
-        </p>
-        <p>
-            <label>First Name: </label>
-            <InputText @bind-Value="student.FirstName"/>
-            <ValidationMessage For="() => student.FirstName"/>
-        </p>
-        <p>
-            <label>Last Name: </label>
-            <InputText @bind-Value="student.LastName"/>
-            <ValidationMessage For="() => student.LastName"/>
-        </p>
-        <p>
-            <label>Username: </label>
-            <InputText @bind-Value="student.Username"/>
-            <ValidationMessage For="() => student.Username"/>
-        </p>
-        <p>
-            <label>Email: </label>
-            <InputText @bind-Value="student.Email"/>
-            <ValidationMessage For="() => student.Email"/>
-        </p>
-        <p>
-            <label>Phone 1: </label>
-            <InputText @bind-Value="student.PhoneOne"/>
-            <ValidationMessage For="() => student.PhoneOne"/>
-        </p>
-        <p>
-            <label>Siblings: </label>
-            <InputNumber @bind-Value="student.SiblingCount"/>
-            <ValidationMessage For="() => student.SiblingCount"/>
-        </p>
-        <button type="submit">Edit</button>
-    </EditForm>
+    <section style="width:600px; margin: 0 auto;">
+        <EditForm Model="@student" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardContent>
+                    <MudNumericField Label="Parent Number" @bind-Value="student.ParentId"
+                                     For="@(() => student.ParentId)"></MudNumericField>
+                    <MudTextField Label="First Name" @bind-Value="student.FirstName"
+                                  For="@(() => student.FirstName)"/>
+                    <MudTextField Label="Last Name" @bind-Value="student.LastName"
+                                  For="@(() => student.LastName)"/>
+                    <MudTextField Label="Username" @bind-Value="student.Username"
+                                  For="@(() => student.Username)"/>
+                    <MudTextField Label="Email" @bind-Value="student.Email"
+                                  For="@(() => student.Email)"/>
+                    <MudTextField Label="Phone 1" @bind-Value="student.PhoneOne"
+                                  For="@(() => student.PhoneOne)"/>
+                    <MudNumericField Label="Sibling Count" @bind-Value="student.SiblingCount"
+                                     For="@(() => student.SiblingCount)"></MudNumericField>
+                    <br/>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" 
+                               Class="ml-auto">Edit Student</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </section>
 
+    <SuccessNotification Uri="Students" @ref="_notification"/>
 
-@if (IsValid)
-{
-    <h3 style="color: green;">Data was updated successfully</h3>
-}
+    
 }

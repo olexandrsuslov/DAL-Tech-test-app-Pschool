@@ -1,75 +1,37 @@
-﻿@* *@
-@* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> *@
-@* <div class="top-row ps-3 navbar navbar-dark"> *@
-@*     <div class="container-fluid"> *@
-@*         <a class="navbar-brand" href=""><img src="favicon.ico">&nbsp;Pschool</a> *@
-@*         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu"> *@
-@*             <span class="navbar-toggler-icon"></span> *@
-@*         </button> *@
-@*     </div> *@
-@* </div> *@
-@* *@
-@* <div class="@NavMenuCssClass" @onclick="ToggleNavMenu"> *@
-@*     <nav class="flex-column"> *@
-@*         <div class="nav-item px-3"> *@
-@*             <div class="nav-link dropdown-toggle" style="color: #d7d7d7;" Match="NavLinkMatch.All" @onclick="()=>expandSubNav = !expandSubNav"> *@
-@*                 <span class="oi oi-home" aria-hidden="true"></span> Parents *@
-@*             </div> *@
-@*             @if (expandSubNav) *@
-@*             { *@
-@*                 <NavLink class="nav-link" href="/AddParent"> *@
-@*                     <span class="oi oi-plus" aria-hidden="true"></span> Add Parent *@
-@*                 </NavLink> *@
-@*                 <NavLink class="nav-link" href="" Match="NavLinkMatch.All"> *@
-@*                     <span class="oi oi-list" aria-hidden="true"></span> Parents *@
-@*                 </NavLink> *@
-@*             } *@
-@*         </div> *@
-@*         <div class="nav-item px-3"> *@
-@*             <div class="nav-link dropdown-toggle" style="color: #d7d7d7;" @onclick="() => expandSubNavTwo = !expandSubNavTwo"> *@
-@*                 <span class="oi oi-home" aria-hidden="true"></span> Students *@
-@*             </div> *@
-@*             @if (expandSubNavTwo) *@
-@*             { *@
-@*                 <NavLink class="nav-link" href="/AddStudent"> *@
-@*                     <span class="oi oi-plus" aria-hidden="true"></span> Add Student *@
-@*                 </NavLink> *@
-@*                 <NavLink class="nav-link" href="Students"> *@
-@*                     <span class="oi oi-list" aria-hidden="true"></span> Students *@
-@*                 </NavLink> *@
-@*             } *@
-@*         </div> *@
-@*     </nav> *@
-@* </div> *@
-@* *@
-@* @code { *@
-@*     private bool collapseNavMenu = true; *@
-@*     private bool expandSubNav; *@
-@*     private bool expandSubNavTwo; *@
-@* *@
-@*     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null; *@
-@* *@
-@*     private void ToggleNavMenu() *@
-@*     { *@
-@*         collapseNavMenu = !collapseNavMenu; *@
-@*     } *@
-@* *@
-@* } *@
+﻿
+
 
 <MudDrawer @bind-Open="SideBarOpen" Elevation="1">
     <MudDrawerHeader>
-        <MudAvatar Color="Color.Transparent" Size="Size.Large" Image="assets/images.png" />
+        <MudAvatar Color="Color.Transparent" Size="Size.Large" Image="assets/images.png"/>
         <MudText Typo="Typo.h5" Color="Color.Primary" Style="margin-top:10px; margin-left:15px;">Pschool</MudText>
     </MudDrawerHeader>
     <MudNavMenu>
+        <AuthorizeView>
+            <Authorized>
+                <MudContainer Style="text-align: center;">
+                <MudAvatar Color="Color.Transparent" Style=" display: inline-block;" Size="Size.Medium" Image="assets/avatar.png"/>
+                <MudText Typo="Typo.h6" Color="Color.Primary" Style="margin-bottom: 20px; display: inline;">@context.User.Identity.Name</MudText>
+                </MudContainer>
+            </Authorized>
+        </AuthorizeView>
         <MudNavGroup Title="Parents" Icon="@Icons.Filled.Person" Expanded="true">
-                    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Filled.Storage">List</MudNavLink>
+            <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Filled.Storage">List</MudNavLink>
+            <AuthorizeView Roles="admin">
+                <Authorized>
                     <MudNavLink Href="/AddParent" Icon="@Icons.Filled.Add">Add Parent</MudNavLink>
-                </MudNavGroup>
-        
+                </Authorized>
+            </AuthorizeView>
+        </MudNavGroup>
+
+
         <MudNavGroup Title="Students" Icon="@Icons.Filled.Person" Expanded="true">
             <MudNavLink Href="Students" Icon="@Icons.Filled.Storage">List</MudNavLink>
-            <MudNavLink Href="/AddStudent" Icon="@Icons.Filled.Add">Add Student</MudNavLink>
+            <AuthorizeView Roles="admin">
+                <Authorized>
+                    <MudNavLink Href="/AddStudent" Icon="@Icons.Filled.Add">Add Student</MudNavLink>
+                </Authorized>
+            </AuthorizeView>
         </MudNavGroup>
     </MudNavMenu>
 </MudDrawer>

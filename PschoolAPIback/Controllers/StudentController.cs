@@ -2,13 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Pschool.Models.Dtos;
+using Pschool.Models.RequestFeatures;
 using PschoolAPIback.DbPschoolContext;
 using PschoolAPIback.Extensions;
 using PschoolAPIback.Models;
+using PschoolAPIback.Paging;
 
 namespace PschoolAPIback.Controllers
 {
@@ -25,14 +29,24 @@ namespace PschoolAPIback.Controllers
 
         // GET: api/Student
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StudentDto>>> GetStudents()
-        {
+        public async Task<ActionResult> GetStudents([FromQuery] DisplayParameters displayParameters)
+        { 
             if (_context.Students == null)
-          {
-              return NotFound();
-          }
-          var students = await _context.Students.ToListAsync();
-          return Ok(students.ConvertToDtoStudents());
+            {
+                return NotFound();
+            }
+
+            
+            var students = await _context.Students.Search(displayParameters.SearchTerm).Sort(displayParameters.OrderBy).ToListAsync();
+            if (displayParameters.SearchParent != null)
+            {
+                students = students.Where(x => x.ParentId == Int32.Parse(displayParameters.SearchParent)).ToList();
+            }
+            var studentlistdto= PagedList<StudentDto>
+                .ToPagedList(students.ConvertToDtoStudents(), displayParameters.PageNumber, displayParameters.PageSize);
+          
+            Response.Headers.Add("Y-Paging", JsonConvert.SerializeObject(studentlistdto.MetaData));
+            return Ok(studentlistdto);
         }
 
         // GET: api/Student/5
@@ -55,6 +69,7 @@ namespace PschoolAPIback.Controllers
 
         // PUT: api/Student/5
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PutStudent(int id, StudentDto studentDto)
         {
             if (id != studentDto.Id)
@@ -88,6 +103,7 @@ namespace PschoolAPIback.Controllers
 
         // POST: api/Student
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<StudentDto>> PostItem([FromBody]StudentDto studentdto)
         {
             try
@@ -119,6 +135,7 @@ namespace PschoolAPIback.Controllers
 
         // DELETE: api/Student/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
             if (_context.Students == null)

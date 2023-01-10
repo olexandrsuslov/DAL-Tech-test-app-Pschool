@@ -1,10 +1,13 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using PschoolAPIback.Configuration;
 using PschoolAPIback.Models;
 
 namespace PschoolAPIback.DbPschoolContext;
 
-public class PschoolContext : DbContext
+public class PschoolContext : IdentityDbContext<IdentityUser>
 {
     public DbSet<Parent> Parents { get; set; }
     public DbSet<Student> Students { get; set; }
@@ -25,4 +28,10 @@ public class PschoolContext : DbContext
             return new PschoolContext(optionsBuilder.Options);
         }
     }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
+    }
+    
 }

@@ -1,6 +1,8 @@
 @page "/AddStudent"
 @inherits AddStudentBase
 @using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "admin")]
 
 <section style="width:600px; margin: 0 auto;">
     <EditForm Model="@student" OnValidSubmit="@HandleValidSubmit">

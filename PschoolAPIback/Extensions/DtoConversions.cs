@@ -5,7 +5,7 @@ namespace PschoolAPIback.Extensions;
 
 public static class DtoConversions
 {
-    public static IEnumerable<ParentDto> ConvertToDto(this IEnumerable<Parent> parents)
+    public static List<ParentDto> ConvertToDto(this IEnumerable<Parent> parents)
     {
         return (from parent in parents
             select new ParentDto
@@ -57,7 +57,7 @@ public static class DtoConversions
         };
     }
     
-    public static IEnumerable<StudentDto> ConvertToDtoStudents(this IEnumerable<Student> students)
+    public static List<StudentDto> ConvertToDtoStudents(this IEnumerable<Student> students)
     {
         return (from student in students
             select new StudentDto

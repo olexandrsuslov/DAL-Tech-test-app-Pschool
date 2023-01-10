@@ -3,21 +3,16 @@
 @using Pschool.Models.Dtos
 @inherits StudentsBase
 
-
-
-
-@if (Students == null)
+@if (Parents == null)
 {
     <DisplaySpinner/>
 }
 else
 {
-    <h3 class="mb-5">Students</h3>
+    var parentsCount = Parents.Count();
 
-    var studentsCount = Students.Count();
-
-    @if (studentsCount > 0)
+    @if (parentsCount > 0)
     {
-        <DisplayStudents Students="@Students.ToList()" Parents="@Parents.ToList()"></DisplayStudents>
+        <DisplayStudents Parents="@Parents.ToList()"></DisplayStudents>
     }
 }

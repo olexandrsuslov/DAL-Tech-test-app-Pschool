@@ -1,38 +1,53 @@
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Pschool.Models.Dtos;
+using Pschool.Models.RequestFeatures;
+using PschoolAPIfront.Features;
 using PschoolAPIfront.Services.Contracts;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace PschoolAPIfront.Services;
 
 public class StudentService : IStudentService
 {
     private readonly HttpClient httpClient;
+    private readonly JsonSerializerOptions _options;
 
     public StudentService(HttpClient httpClient)
     {
         this.httpClient = httpClient;
+        _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
-    public async Task<IEnumerable<StudentDto>> GetItems()
+    public async Task<PagingResponse<StudentDto>> GetItems(DisplayParameters _displayParameters)
     {
         try
-        { 
-            var response = await this.httpClient.GetAsync("api/Student");
-            if (response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                {
-                    return Enumerable.Empty<StudentDto>();
-                }
+        {
 
-                return await response.Content.ReadFromJsonAsync<IEnumerable<StudentDto>>();
-            }
-            else
+            var queryStringParam = new Dictionary<string, string>
             {
-                var message = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Http status code: {response.StatusCode} message: {message}");
+                ["pageNumber"] = _displayParameters.PageNumber.ToString(),
+                ["pageSize"] = _displayParameters.PageSize.ToString(),
+                ["searchParent"] = _displayParameters.SearchParent ?? "",
+                ["searchTerm"] = _displayParameters.SearchTerm ?? "",
+                ["orderBy"] = _displayParameters.OrderBy ?? "name"
+            };
+            using (var response = await httpClient.GetAsync(QueryHelpers.AddQueryString("api/Student", queryStringParam)))
+            {
+                response.EnsureSuccessStatusCode();
+                var metaData = System.Text.Json.JsonSerializer
+                    .Deserialize<MetaData>(response.Headers.GetValues("Y-Paging").First(), _options);
+                var stream = await response.Content.ReadAsStreamAsync();
+                
+                var pagingResponse = new PagingResponse<StudentDto>
+                {
+                    Items = await JsonSerializer.DeserializeAsync<List<StudentDto>>(stream, _options),
+                    MetaData = metaData
+                };
+                return pagingResponse;
             }
         }
         catch (Exception e)

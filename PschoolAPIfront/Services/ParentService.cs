@@ -1,43 +1,59 @@
 using System.Net.Http.Json;
 using System.Text;
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Pschool.Models.Dtos;
+using Pschool.Models.RequestFeatures;
 using PschoolAPIfront.Services.Contracts;
+using JsonSerializerOptions = System.Text.Json.JsonSerializerOptions;
+using System.Text.Json;
+using PschoolAPIfront.Features;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace PschoolAPIfront.Services;
 
 public class ParentService : IParentService
 {
     private readonly HttpClient httpClient;
+    private readonly JsonSerializerOptions _options;
 
     public ParentService(HttpClient httpClient)
     {
         this.httpClient = httpClient;
+        _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
-    public async Task<IEnumerable<ParentDto>> GetItems()
+    public async Task<PagingResponse<ParentDto>> GetItems(DisplayParameters _displayParameters)
     {
         try
-        { 
-            var response = await this.httpClient.GetAsync("api/Parent");
-            if (response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                {
-                    return Enumerable.Empty<ParentDto>();
-                }
+        {
 
-                return await response.Content.ReadFromJsonAsync<IEnumerable<ParentDto>>();
-            }
-            else
+            var queryStringParam = new Dictionary<string, string>
             {
-                var message = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Http status code: {response.StatusCode} message: {message}");
+                ["pageNumber"] = _displayParameters.PageNumber.ToString(),
+                ["pageSize"] = _displayParameters.PageSize.ToString(),
+                ["searchTerm"] = _displayParameters.SearchTerm ?? "",
+                ["orderBy"] = _displayParameters.OrderBy ?? "name"
+            };
+            using (var response = await httpClient.GetAsync(QueryHelpers.AddQueryString("api/Parent", queryStringParam)))
+            {
+                response.EnsureSuccessStatusCode();
+                var metaData = JsonSerializer
+                    .Deserialize<MetaData>(response.Headers.GetValues("X-Paging").First(), _options);
+                var stream = await response.Content.ReadAsStreamAsync();
+                
+                var pagingResponse = new PagingResponse<ParentDto>
+                {
+                    Items = await JsonSerializer.DeserializeAsync<List<ParentDto>>(stream, _options),
+                    MetaData = metaData
+                };
+                return pagingResponse;
             }
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
+            Console.WriteLine("problem with headers");
             throw;
         }
     }
@@ -55,6 +71,33 @@ public class ParentService : IParentService
                 }
 
                 return await response.Content.ReadFromJsonAsync<ParentDto>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Http status code: {response.StatusCode} message: {message}");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    public async Task<IEnumerable<ParentDto>> GetItemsDefault()
+    {
+        try
+        { 
+            var response = await this.httpClient.GetAsync("api/Parent/GetParents");
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    return Enumerable.Empty<ParentDto>();
+                }
+
+                return await response.Content.ReadFromJsonAsync<IEnumerable<ParentDto>>();
             }
             else
             {
