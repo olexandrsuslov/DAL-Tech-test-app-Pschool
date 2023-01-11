@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Pschool.Models.Dtos;
 using Pschool.Models.RequestFeatures;
+using PschoolAPIfront.HttpRepository;
 using PschoolAPIfront.Services.Contracts;
 
 namespace PschoolAPIfront.Pages;
@@ -12,11 +13,20 @@ public partial class DisplayParents
     private DisplayParameters _displayParameters = new DisplayParameters();
     public readonly int[] _pageSizeOption = { 4, 6, 8 };
     
+    // [Inject]
+    // public HttpInterceptorService Interceptor { get; set; }
+    
     [Inject]
     public IParentService ParentService { get; set; }
     
+    //
+    // protected async override Task OnInitializedAsync()
+    // {
+    //     Interceptor.RegisterEvent();
+    // }
     protected async Task DeleteItem_Click(int id)
     {
+        
         var response = await ParentService.DeleteItem(id);
         _table.ReloadServerData();
         // RemoveItem(id);
@@ -42,5 +52,7 @@ public partial class DisplayParents
         _displayParameters.SearchTerm = searchTerm;
         _table.ReloadServerData();
     }
+    
+    // public void Dispose() => Interceptor.DisposeEvent();
 
 }

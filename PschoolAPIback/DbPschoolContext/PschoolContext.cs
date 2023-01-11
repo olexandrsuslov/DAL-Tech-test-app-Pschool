@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using PschoolAPIback.Configuration;
+using PschoolAPIback.Context;
 using PschoolAPIback.Models;
 
 namespace PschoolAPIback.DbPschoolContext;
 
-public class PschoolContext : IdentityDbContext<IdentityUser>
+public class PschoolContext : IdentityDbContext<User>
 {
     public DbSet<Parent> Parents { get; set; }
     public DbSet<Student> Students { get; set; }

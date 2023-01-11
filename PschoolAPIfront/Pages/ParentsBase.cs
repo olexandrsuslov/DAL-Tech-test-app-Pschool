@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Pschool.Models.Dtos;
 using Pschool.Models.RequestFeatures;
+using PschoolAPIfront.HttpRepository;
 using PschoolAPIfront.Services.Contracts;
 
 namespace PschoolAPIfront.Pages;
@@ -12,8 +13,10 @@ public class ParentsBase : ComponentBase
 
     public IEnumerable<ParentDto> Parents { get; set; }
 
-    protected override async  Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         Parents = await ParentService.GetItemsDefault();
     }
+    
+    
 }

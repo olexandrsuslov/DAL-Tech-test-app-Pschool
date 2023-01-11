@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Pschool.Models.Dtos;
+using PschoolAPIfront.HttpRepository;
 using PschoolAPIfront.Services.Contracts;
 
 namespace PschoolAPIfront.Pages;
@@ -17,4 +18,5 @@ public class StudentsBase : ComponentBase
     {
         Parents = await ParentService.GetItemsDefault();
     }
+
 }

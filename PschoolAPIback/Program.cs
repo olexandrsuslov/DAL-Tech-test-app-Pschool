@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using PschoolAPIback;
+using PschoolAPIback.Context;
 using PschoolAPIback.DbPschoolContext;
+using PschoolAPIback.TokenHelpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +19,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PschoolContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddIdentity<IdentityUser, IdentityRole>() 
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddIdentity<User, IdentityRole>() 
     .AddEntityFrameworkStores<PschoolContext>();
 
 var jwtSettings = builder.Configuration.GetSection("JWTSettings");

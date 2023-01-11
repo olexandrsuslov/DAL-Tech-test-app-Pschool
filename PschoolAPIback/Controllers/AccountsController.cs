@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Pschool.Models.Dtos;
+using PschoolAPIback.Context;
+using PschoolAPIback.TokenHelpers;
 
 namespace PschoolAPIback.Controllers;
 
@@ -13,22 +15,20 @@ namespace PschoolAPIback.Controllers;
 [ApiController]
 public class AccountsController : ControllerBase
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly IConfiguration _configuration;
-    private readonly IConfigurationSection _jwtSettings;
-    
-    public AccountsController(UserManager<IdentityUser> userManager, IConfiguration configuration)
+    private readonly UserManager<User> _userManager;
+    private readonly ITokenService _tokenService;
+
+    public AccountsController(UserManager<User> userManager, ITokenService tokenService)
     {
         _userManager = userManager;
-        _configuration = configuration;
-        _jwtSettings = _configuration.GetSection("JwtSettings");
+        _tokenService = tokenService;
     }
     [HttpPost("Registration")]
     public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration) 
     { 
         if (userForRegistration == null || !ModelState.IsValid)
             return BadRequest();
-        var user = new IdentityUser { UserName = userForRegistration.Email, Email = userForRegistration.Email };
+        var user = new User { UserName = userForRegistration.Email, Email = userForRegistration.Email };
             
         var result = await _userManager.CreateAsync(user, userForRegistration.Password); 
         if (!result.Succeeded) 
@@ -47,44 +47,16 @@ public class AccountsController : ControllerBase
         var user = await _userManager.FindByNameAsync(userForAuthentication.Email);
         if (user == null || !await _userManager.CheckPasswordAsync(user, userForAuthentication.Password))
             return Unauthorized(new AuthResponseDto { ErrorMessage = "Invalid Authentication" });
-        var signingCredentials = GetSigningCredentials(); 
-        var claims = await GetClaims(user); 
-        var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
+        var signingCredentials = _tokenService.GetSigningCredentials(); 
+        var claims = await _tokenService.GetClaims(user); 
+        var tokenOptions = _tokenService.GenerateTokenOptions(signingCredentials, claims);
         var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-        return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = token });
-    }
-    private SigningCredentials GetSigningCredentials() 
-    { 
-        var key = Encoding.UTF8.GetBytes(_jwtSettings["securityKey"]); 
-        var secret = new SymmetricSecurityKey(key); 
-            
-        return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256); 
-    }
-    private async Task<List<Claim>> GetClaims(IdentityUser user) 
-    { 
-        var claims = new List<Claim> 
-        { 
-            new Claim(ClaimTypes.Name, user.Email) 
-        }; 
         
-        var roles = await _userManager.GetRolesAsync(user); 
-        foreach (var role in roles) 
-        { 
-            claims.Add(new Claim(ClaimTypes.Role, role)); 
-        }
-            
-        return claims; 
-    }
-    private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims) 
-    { 
-        var tokenOptions = new JwtSecurityToken(
-            issuer: _jwtSettings["validIssuer"], 
-            audience: _jwtSettings["validAudience"], 
-            claims: claims, 
-            expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings["expiryInMinutes"])), 
-            signingCredentials: signingCredentials); 
-            
-        return tokenOptions; 
+        user.RefreshToken = _tokenService.GenerateRefreshToken();
+        user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+        await _userManager.UpdateAsync(user);
+        
+        return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = token, RefreshToken = user.RefreshToken });
     }
     
     

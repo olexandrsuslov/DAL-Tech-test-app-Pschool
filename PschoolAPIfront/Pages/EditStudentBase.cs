@@ -1,18 +1,22 @@
 using Microsoft.AspNetCore.Components;
 using Pschool.Models.Dtos;
+using PschoolAPIfront.HttpRepository;
 using PschoolAPIfront.Services;
 using PschoolAPIfront.Services.Contracts;
 using PschoolAPIfront.Shared;
 
 namespace PschoolAPIfront.Pages;
 
-public class EditStudentBase : ComponentBase
+public class EditStudentBase : ComponentBase, IDisposable
 {
     [Parameter]
     public int Id { get; set; }
     public StudentDto student { get; set; }
     [Inject]
     public IStudentService studentService { get; set; }
+    
+    [Inject]
+    public HttpInterceptorService Interceptor { get; set; }
 
     public string ErrorMessage { get; set; }
 
@@ -23,6 +27,7 @@ public class EditStudentBase : ComponentBase
     {
         try
         {
+            Interceptor.RegisterEvent();
             student = await studentService.GetItem(Id);
         }
         catch (Exception e)
@@ -44,4 +49,5 @@ public class EditStudentBase : ComponentBase
             ErrorMessage = e.Message;
         }
     }
+    public void Dispose() => Interceptor.DisposeEvent();
 }

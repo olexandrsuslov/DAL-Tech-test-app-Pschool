@@ -1,15 +1,18 @@
 using Microsoft.AspNetCore.Components;
 using Pschool.Models.Dtos;
+using PschoolAPIfront.HttpRepository;
 using PschoolAPIfront.Services.Contracts;
 using PschoolAPIfront.Shared;
 
 namespace PschoolAPIfront.Pages;
 
-public class AddStudentBase : ComponentBase
+public class AddStudentBase : ComponentBase, IDisposable
 {
     public StudentDto student { get; set; }
     [Inject]
     public IStudentService studentService { get; set; }
+    [Inject]
+    public HttpInterceptorService Interceptor { get; set; }
     
     public SuccessNotification _notification;
 
@@ -17,6 +20,7 @@ public class AddStudentBase : ComponentBase
     
     protected override void OnInitialized()
     {
+        Interceptor.RegisterEvent();
         student = new StudentDto();
     }
     public async Task HandleValidSubmit()
@@ -33,5 +37,7 @@ public class AddStudentBase : ComponentBase
             ErrorMessage = e.Message;
         }
     }
+    
+    public void Dispose() => Interceptor.DisposeEvent();
     
 }

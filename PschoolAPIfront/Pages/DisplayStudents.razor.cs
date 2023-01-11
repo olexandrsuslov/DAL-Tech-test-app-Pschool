@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Pschool.Models.Dtos;
 using Pschool.Models.RequestFeatures;
+using PschoolAPIfront.HttpRepository;
 using PschoolAPIfront.Services.Contracts;
 using Syncfusion.Blazor.DropDowns;
 
@@ -18,6 +19,8 @@ public partial class DisplayStudents
     private DisplayParameters _displayParameters = new DisplayParameters();
     public readonly int[] _pageSizeOption = { 4, 6, 8 };
 
+    // [Inject]
+    // public HttpInterceptorService Interceptor { get; set; }
     [Inject]
     public IStudentService StudentService { get; set; }
     [Parameter]
@@ -28,6 +31,10 @@ public partial class DisplayStudents
     [Inject]
     public IParentService ParentService { get; set; }
     
+    // protected async override Task OnInitializedAsync()
+    // {
+    //     Interceptor.RegisterEvent();
+    // }
 
     protected async Task DeleteItem_Click(int id)
     {
@@ -85,4 +92,6 @@ public partial class DisplayStudents
         _displayParameters.SearchTerm = searchTerm;
         _table.ReloadServerData();
     }
+    
+    // public void Dispose() => Interceptor.DisposeEvent();
 }
